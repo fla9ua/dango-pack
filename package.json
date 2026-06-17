@@ -1,7 +1,7 @@
 {
   "name": "dango-pack",
-  "version": "0.1.0",
-  "description": "日本のプロダクト開発に最適化した、Claude Code / Codex 用の仮想開発組織",
+  "version": "0.2.0",
+  "description": "日本のチーム開発に最適化した、Claude Code / Codex 用の仮想開発組織",
   "type": "module",
   "bin": {
     "dango-install": "bin/install.mjs"
