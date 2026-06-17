@@ -1,6 +1,6 @@
 {
   "name": "dango-pack",
-  "version": "0.2.2",
+  "version": "0.1.3",
   "description": "日本のチーム開発に最適化した、Claude Code / Codex 用の仮想開発組織",
   "type": "module",
   "bin": {
