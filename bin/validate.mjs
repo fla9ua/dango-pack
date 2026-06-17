@@ -45,6 +45,14 @@ for (const name of readdirSync(skillsDir)) {
     if (!existsSync(join(dir, "sections", ref)))
       errors.push(`${name}: 参照先 sections/${ref} が存在しません`);
   }
+
+  // templates 参照切れ(スキルは個別リンクされるため、実行時に使う雛形は
+  // スキル内に無いと解決できない)
+  const tpl = [...text.matchAll(/templates\/([\w-]+\.md)/g)].map((m) => m[1]);
+  for (const ref of new Set(tpl)) {
+    if (!existsSync(join(dir, "templates", ref)))
+      errors.push(`${name}: 参照先 templates/${ref} が存在しません`);
+  }
 }
 
 if (errors.length) {

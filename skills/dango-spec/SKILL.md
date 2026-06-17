@@ -1,6 +1,6 @@
 ---
 name: dango-spec
-version: 0.1.0
+version: 0.1.3
 description: "設計ドキュメント役 — 日本のチーム開発で求められる要件定義書/基本設計書/詳細設計書を、現場の作法に沿って生成・更新する。(dango-pack)"
 allowed-tools:
   - Read

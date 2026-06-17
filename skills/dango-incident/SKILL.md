@@ -1,6 +1,6 @@
 ---
 name: dango-incident
-version: 0.1.0
+version: 0.1.3
 description: "障害報告・ポストモーテム役 — 日本企業の作法に沿った障害報告書(社外/社内)と、非難なしのポストモーテムを作成する。(dango-pack)"
 allowed-tools:
   - Read
