@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="dango-pack ロゴ:串に刺した三色団子">
+  <title>dango-pack</title>
+  <!-- 背景は透過。串団子を斜めに(中心まわりに回転) -->
+  <g transform="rotate(-22 128 128)">
+    <!-- 串(進行役 dango-run) -->
+    <rect x="123" y="24" width="10" height="208" rx="5" fill="#CBA06A"/>
+    <rect x="123" y="24" width="4" height="208" rx="2" fill="#D9B488"/>
+    <!-- 三色団子(各役割):上→下の順で重ね、各団子は自色の濃い縁。
+         後から描く下の団子が前の縁を覆うので、隣に縁の弧が残らない。 -->
+    <circle cx="128" cy="74"  r="32" fill="#F0A6B8" stroke="#E08FA6" stroke-width="2"/>
+    <circle cx="128" cy="132" r="32" fill="#FBF4E8" stroke="#EADFCC" stroke-width="2"/>
+    <circle cx="128" cy="190" r="32" fill="#AFCB86" stroke="#9DBB72" stroke-width="2"/>
+    <!-- ハイライト -->
+    <g fill="#FFFFFF">
+      <ellipse cx="116" cy="62"  rx="9" ry="6" opacity="0.45"/>
+      <ellipse cx="116" cy="120" rx="9" ry="6" opacity="0.7"/>
+      <ellipse cx="116" cy="178" rx="9" ry="6" opacity="0.4"/>
+    </g>
+  </g>
+</svg>

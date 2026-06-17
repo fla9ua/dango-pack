@@ -1,4 +1,8 @@
-# dango-pack(団子パック)
+<p align="center">
+  <img src="assets/logo.png" width="120" alt="dango-pack ロゴ:串に刺した三色団子">
+</p>
+
+<h1 align="center">dango-pack(団子パック)</h1>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![version](https://img.shields.io/badge/version-0.1.3-blue.svg)
@@ -124,12 +128,7 @@ dango-pack 本体のディレクトリと成果物(`~/.dango-pack/`)は残りま
 
 ## ロードマップ
 
-- v0.1: 日本語レビュー役を中心とした MVP ✅
-- v0.2: 法務・コンプラ役(特商法/個人情報保護法/インボイス/景表法) ✅
-- v0.3: 設計ドキュメント役(要件定義書/基本設計/詳細設計の日本式テンプレ) ✅
-- v0.4: 障害報告・ポストモーテム役(日本企業フォーマットの報告書) ✅
-- v0.5(次): 国内スタック統合(Backlog / Notion / Slack / 国内クラウド)
-
+今後の予定・検討中の項目は [ROADMAP.md](ROADMAP.md) を参照。
 新しい役割の追加方法は [CONTRIBUTING.md](CONTRIBUTING.md) を参照。
 
 ## ライセンス
