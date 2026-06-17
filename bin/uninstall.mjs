@@ -2,7 +2,7 @@
 // install.mjs の逆操作。~/.claude/skills/ に張った dango-pack のリンクだけを外す。
 // dango-pack 本体や成果物(~/.dango-pack/)は消さない。
 
-import { lstatSync, readlinkSync, rmSync, readdirSync } from 'node:fs';
+import { lstatSync, readlinkSync, rmSync, readdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -23,6 +23,17 @@ for (const name of owned) {
     rmSync(dest);
     console.log(`unlinked: ${name}`);
     removed++;
+  }
+}
+
+// ~/.claude/CLAUDE.md に注入した役割ガイドを除去
+const claudeMd = join(homedir(), '.claude', 'CLAUDE.md');
+if (existsSync(claudeMd)) {
+  const re = /\n*<!-- dango-pack:start -->[\s\S]*?<!-- dango-pack:end -->\n*/;
+  const md = readFileSync(claudeMd, 'utf8');
+  if (re.test(md)) {
+    writeFileSync(claudeMd, md.replace(re, '\n'));
+    console.log('removed: CLAUDE.md の役割ガイドを除去');
   }
 }
 
