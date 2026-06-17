@@ -67,8 +67,8 @@ dango-pack は、これらの「日本でしか要らない仕事」を役割と
 ### 手順
 
 ```bash
-# 1. クローン(URL は自分の取得先に置き換え)
-git clone https://github.com/<your-account>/dango-pack.git
+# 1. クローン
+git clone https://github.com/fla9ua/dango-pack.git
 cd dango-pack
 
 # 2. スキルを Claude Code に登録(~/.claude/skills/ にシンボリックリンク)
