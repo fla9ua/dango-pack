@@ -1,5 +1,9 @@
 # dango-pack(団子パック)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![version](https://img.shields.io/badge/version-0.2.2-blue.svg)
+[![CI](https://github.com/fla9ua/dango-pack/actions/workflows/ci.yml/badge.svg)](https://github.com/fla9ua/dango-pack/actions/workflows/ci.yml)
+
 > 日本の開発現場に、母語と日本の文脈で動く役割を。
 
 **dango-pack(団子パック)** は、Claude Code / Codex の上で動く「仮想の開発組織」を、
