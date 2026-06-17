@@ -1,6 +1,6 @@
 {
   "name": "dango-pack",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "日本のチーム開発に最適化した、Claude Code / Codex 用の仮想開発組織",
   "type": "module",
   "bin": {
@@ -8,6 +8,7 @@
   },
   "scripts": {
     "install:skills": "node bin/install.mjs",
+    "validate": "node bin/validate.mjs",
     "decisions": "node bin/dango-state.mjs log"
   },
   "engines": {

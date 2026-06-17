@@ -6,6 +6,14 @@
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-06-17
+### Added
+- OSS 運用の環境整備: `CODE_OF_CONDUCT.md`、`SECURITY.md`、Issue/PR テンプレート、
+  GitHub Actions CI(`bin/validate.mjs` による SKILL.md 体裁・sections 参照検証)。
+- README にバッジ、CONTRIBUTING に開発フロー(ブランチ+PR / rebase のみ)とリリース手順。
+### Fixed
+- `LICENSE` と `.gitignore` に残っていた旧名 `wagumi` の表記を修正。
+
 ## [0.2.1] - 2026-06-17
 ### Added
 - `bin/install.mjs` が `~/.claude/CLAUDE.md` に役割ガイドを自動注入するように
@@ -24,7 +32,8 @@
 - 核となる日本語レビュー役(全角半角・和暦・禁則・郵便番号/住所・IME/組版)。
 - インストール/アンインストール、状態・決定ログ helper(Node・ビルド不要)。
 
-[Unreleased]: https://github.com/fla9ua/dango-pack/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/fla9ua/dango-pack/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/fla9ua/dango-pack/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/fla9ua/dango-pack/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/fla9ua/dango-pack/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/fla9ua/dango-pack/releases/tag/v0.1.0

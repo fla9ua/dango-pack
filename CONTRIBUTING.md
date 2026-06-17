@@ -34,3 +34,26 @@ dango-pack の役割は **SKILL.md 1枚**が単位です。コードはほぼ要
 - **専用エンジンを足さない。** スキル連鎖・サブエージェント・ファイル成果物で表現する。
 - **薄い自前層(bin/)は依存ゼロ・ビルド不要**を保つ。利用者の Node でそのまま動くこと。
 - トーンは日本の開発文化に合わせ、断定で殴らず理由付きで提案する。
+
+## 開発フロー(プルリクエスト)
+
+`main` はブランチ保護されています。直接 push せず、以下で進めてください。
+
+1. ブランチを切る(例: `feat/...` / `fix/...` / `chore/...`)。
+2. 変更を入れ、ローカル検証を通す:
+   ```bash
+   node bin/validate.mjs   # SKILL.md の体裁・sections 参照切れを検査
+   node bin/install.mjs    # 実際にリンクして挙動を確認
+   ```
+3. PR を作成。CI(`node bin/validate.mjs` ほか)が通ること。
+4. **マージは rebase のみ**許可(merge commit / squash は無効)。
+
+## リリース手順(メンテナ向け)
+
+1. `package.json` の `version` を更新(セマンティックバージョニング)。
+2. `CHANGELOG.md` に該当バージョンの項目を追記。
+3. PR をマージ後、`main` にタグを打って push:
+   ```bash
+   git tag -a vX.Y.Z -m "vX.Y.Z — 概要"
+   git push origin vX.Y.Z
+   ```
