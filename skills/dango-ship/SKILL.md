@@ -1,6 +1,6 @@
 ---
 name: dango-ship
-version: 0.1.0
+version: 0.1.3
 description: "出荷役 — 日本語のコミット規約とPR本文で変更を締める。(dango-pack)"
 allowed-tools:
   - Read
@@ -42,9 +42,9 @@ git diff --stat
 - 本文: なぜ変えたか(背景)と、何を変えたか。箇条書き可。
 - 例:
   ```
-  機能: 郵便番号から住所を自動入力できるようにする
+  機能: 住所から郵便番号を自動補完できるようにする
 
-  - 入力離脱を減らすため addresstozip.jp API で都道府県・市区町村を補完
+  - 入力離脱を減らすため addresstozip.jp API で住所→郵便番号を補完
   - 郵便番号は NFKC 正規化してハイフンなし7桁で保存
   ```
 

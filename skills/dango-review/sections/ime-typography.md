@@ -29,7 +29,8 @@
 ### 3. 文字数カウント ★誤りやすい
 - `str.length` は UTF-16 コード単位。絵文字・サロゲートペアで実際の文字数とずれる。
   - 「𠮟」「🍣」などで `length` が 2 になる。
-  - 書記素単位で数えるなら `Intl.Segmenter` か `[...str].length`(コードポイント)。
+  - 書記素単位で数えるなら `new Intl.Segmenter('ja', { granularity: 'grapheme' })`、
+    コードポイント単位なら `[...str].length`。
 - 全角=2文字としてカウントすべき要件(SMS・帳票)があるか確認。
 - Grep 例: `rg '\.length|maxLength|文字数|文字以内'`
 
@@ -43,5 +44,5 @@
 
 ## 直し方の指針
 - 検索/送信フォームは必ず `isComposing` ガードを入れる(最優先で指摘)。
-- 文字数制限は要件を確認し、書記素なら `Intl.Segmenter('ja')` を提案。
+- 文字数制限は要件を確認し、書記素なら `new Intl.Segmenter('ja', { granularity: 'grapheme' })` を提案。
 - `font-family` に日本語 fallback を追加する具体修正を出す。
