@@ -69,7 +69,9 @@ git diff --name-only HEAD 2>/dev/null || true
      --high <高の件数> --mid <中の件数> --low <低の件数> \
      --branch "$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
    ```
-   (単体利用で dango-run のループに乗せないときは省略可。)
+   この `verdict` は**確認を取らず自動で実行してよい**(状態ファイルを書くだけの
+   非破壊操作)。`dango-run` から呼ばれたとき・後続でゲート判定が要るときは必ず出す。
+   日本語観点と無関係な単発レビューでのみ省略可。
 5. **直すか聞く** — 重大指摘があれば `AskUserQuestion` で「今すぐ直すか/記録だけか」
    を確認し、許可されたら `Edit` で修正する。
 
