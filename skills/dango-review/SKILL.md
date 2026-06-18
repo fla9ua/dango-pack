@@ -61,7 +61,16 @@ git diff --name-only HEAD 2>/dev/null || true
    解決できないため空振りする)。渡すのは「観点名・検出ルール本文・対象ファイル群」。
 3. **指摘をまとめる** — このスキル内の `templates/review.md` の体裁で
    `~/.dango-pack/projects/{repo}/reviews/{日付}.md` に保存し、要約を会話に返す。
-4. **直すか聞く** — 重大指摘があれば `AskUserQuestion` で「今すぐ直すか/記録だけか」
+4. **判定を機械可読で残す** — dango-pack を clone 済みなら、重大度の件数を
+   `verdict.json` に書き出す。これが `dango-run` のゲート判定(continue/戻り/
+   エスカレート)の唯一の入力になる。**散文の件数だけで済ませない。**
+   ```bash
+   node <dango-pack>/bin/dango-state.mjs verdict \
+     --high <高の件数> --mid <中の件数> --low <低の件数> \
+     --branch "$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+   ```
+   (単体利用で dango-run のループに乗せないときは省略可。)
+5. **直すか聞く** — 重大指摘があれば `AskUserQuestion` で「今すぐ直すか/記録だけか」
    を確認し、許可されたら `Edit` で修正する。
 
 ## 点検する5観点(各 sections を参照)
