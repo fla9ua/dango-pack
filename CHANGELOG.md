@@ -6,6 +6,18 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-21
+### Added
+- ゲートの実機化: `bin/dango-state.mjs` に `check --<name> pass|fail` を追加し、
+  ビルド/起動/スモークの合否を `check.json` に記録。`gate` は「レビュー『高』が残る」
+  **または**「実機チェックに `fail` がある」を阻害要因として `continue|loop-back|escalate`
+  を判定する(文書だけでなく動作で関門を閉じる)。`check` 未記録時は従来どおりレビューのみで判定。
+- `dango-run` に **autoplan(計画一気通し)モード**。計画フェーズ(`dango-plan`→`dango-spec`
+  →自己レビュー)を無確認で連鎖し、実装(`Edit`)の手前で人間に渡す。
+### Changed
+- `gate --reset` が往復カウンタに加えて前回の `check.json` も初期化(feature 跨ぎの誤ブロック防止)。
+- `decisions.log` のゲート行に `checks_failed=` を追記。
+
 ## [0.1.3] - 2026-06-17
 ### Added
 - OSS 運用の環境整備: `CODE_OF_CONDUCT.md`、`SECURITY.md`、Issue/PR テンプレート、
@@ -32,7 +44,8 @@
 - 核となる日本語レビュー役(全角半角・和暦・禁則・郵便番号/住所・IME/組版)。
 - インストール/アンインストール、状態・決定ログ helper(Node・ビルド不要)。
 
-[Unreleased]: https://github.com/fla9ua/dango-pack/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/fla9ua/dango-pack/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/fla9ua/dango-pack/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/fla9ua/dango-pack/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/fla9ua/dango-pack/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/fla9ua/dango-pack/compare/v0.1.0...v0.1.1
