@@ -8,7 +8,10 @@
 //   node bin/dango-state.mjs log                  決定ログを表示
 //   node bin/dango-state.mjs verdict --high N [--mid N --low N] [--target T --branch B]
 //                                                  レビュー結果を構造化して保存(verdict.json)
-//   node bin/dango-state.mjs gate [--reset]       verdict.json と往復回数から
+//   node bin/dango-state.mjs check --<name> pass|fail [...]
+//                                                  実機チェック(ビルド/起動/スモーク等)の
+//                                                  合否を記録(check.json)。gate がこれも見る
+//   node bin/dango-state.mjs gate [--reset]       verdict.json + check.json + 往復回数から
 //                                                  continue|loop-back|escalate をコード判定
 
 import { execSync } from 'node:child_process';
@@ -113,16 +116,44 @@ switch (cmd) {
     process.stdout.write(`verdict saved: high=${high} mid=${mid} low=${low}\n`);
     break;
   }
+  case 'check': {
+    // 実機チェック(ビルド通過/起動/主要導線スモーク等)の合否を記録する。
+    // gate はこれも阻害要因として見る → 「文書」だけでなく「動作」で関門を閉じる。
+    const f = parseFlags(rest);
+    const checks = {};
+    for (const [k, v] of Object.entries(f)) {
+      if (k === '_' || k === 'reset') continue;
+      const val = String(v).toLowerCase();
+      if (val !== 'pass' && val !== 'fail') {
+        console.error(`check: --${k} には pass か fail を渡してください(受領: ${v})`);
+        process.exit(1);
+      }
+      checks[k] = val;
+    }
+    mkdirSync(base, { recursive: true });
+    const checkPath = join(base, 'check.json');
+    if (f.reset || Object.keys(checks).length === 0) {
+      writeFileSync(checkPath, JSON.stringify({ checks: {}, at: new Date().toISOString() }, null, 2) + '\n');
+      process.stdout.write('check reset: (記録なし)\n');
+      break;
+    }
+    writeFileSync(checkPath, JSON.stringify({ checks, at: new Date().toISOString() }, null, 2) + '\n');
+    const summary = Object.entries(checks).map(([k, v]) => `${k}=${v}`).join(' ');
+    process.stdout.write(`check saved: ${summary}\n`);
+    break;
+  }
   case 'gate': {
-    // 状態(verdict + 往復回数)を読んで、continue|loop-back|escalate をコードで決める。
+    // 状態(verdict + check + 往復回数)を読んで、continue|loop-back|escalate をコードで決める。
     // モデルはこの結果に従うだけ。3回上限の判定もここで強制する。
     mkdirSync(base, { recursive: true });
     const f = parseFlags(rest);
     const gatePath = join(base, 'gate.json');
 
     if (f.reset) {
+      // 新しい feature の頭で往復カウンタも前回の実機チェックも初期化する。
       writeFileSync(gatePath, JSON.stringify({ roundtrips: 0 }, null, 2) + '\n');
-      process.stdout.write('gate reset: roundtrips=0\n');
+      writeFileSync(join(base, 'check.json'), JSON.stringify({ checks: {}, at: new Date().toISOString() }, null, 2) + '\n');
+      process.stdout.write('gate reset: roundtrips=0, checks cleared\n');
       break;
     }
 
@@ -134,8 +165,16 @@ switch (cmd) {
     const gateState = readJson(gatePath, { roundtrips: 0 });
     const high = Number(verdict.high ?? 0);
 
+    // 実機チェック: check.json があれば fail を阻害要因として扱う(無ければ従来どおり無視)。
+    const check = readJson(join(base, 'check.json'), null);
+    const failedChecks = check && check.checks
+      ? Object.entries(check.checks).filter(([, v]) => v === 'fail').map(([k]) => k)
+      : [];
+
+    const blocked = high > 0 || failedChecks.length > 0;
+
     let action;
-    if (high === 0) {
+    if (!blocked) {
       action = 'continue';
     } else if (gateState.roundtrips < MAX_ROUNDTRIPS) {
       gateState.roundtrips += 1;
@@ -146,18 +185,24 @@ switch (cmd) {
     writeFileSync(gatePath, JSON.stringify(gateState, null, 2) + '\n');
 
     const iter = gateState.roundtrips;
-    const line = `${new Date().toISOString()}\tgate\tstep=review\titer=${iter}\thigh=${high}\tmid=${verdict.mid ?? 0}\tlow=${verdict.low ?? 0}\taction=${action}\n`;
+    const checksField = failedChecks.length ? failedChecks.join(',') : '-';
+    const line = `${new Date().toISOString()}\tgate\tstep=review\titer=${iter}\thigh=${high}\tmid=${verdict.mid ?? 0}\tlow=${verdict.low ?? 0}\tchecks_failed=${checksField}\taction=${action}\n`;
     appendFileSync(join(base, 'decisions.log'), line);
 
+    // 阻害要因を人間語でまとめる(レビュー指摘・実機 fail の両方を明示)。
+    const reasons = [];
+    if (high > 0) reasons.push(`重大度「高」${high}件`);
+    if (failedChecks.length) reasons.push(`実機チェック fail: ${failedChecks.join(', ')}`);
+    const reasonText = reasons.join(' / ');
     const human = {
-      continue: `重大度「高」なし → 次の工程へ進む (continue)`,
-      'loop-back': `重大度「高」${high}件 → 実装へ戻す (loop-back ${iter}/${MAX_ROUNDTRIPS})`,
-      escalate: `往復上限 ${MAX_ROUNDTRIPS} 回に達し「高」${high}件が残存 → 人間にエスカレート (escalate)`,
+      continue: `阻害要因なし(レビュー「高」0・実機チェック fail なし) → 次の工程へ進む (continue)`,
+      'loop-back': `${reasonText} → 実装へ戻す (loop-back ${iter}/${MAX_ROUNDTRIPS})`,
+      escalate: `往復上限 ${MAX_ROUNDTRIPS} 回に達し ${reasonText} が残存 → 人間にエスカレート (escalate)`,
     }[action];
     process.stdout.write(`${human}\naction=${action}\n`);
     break;
   }
   default:
-    console.error('usage: dango-state.mjs <init|path|decide|log|verdict|gate> [args]');
+    console.error('usage: dango-state.mjs <init|path|decide|log|verdict|check|gate> [args]');
     process.exit(1);
 }
